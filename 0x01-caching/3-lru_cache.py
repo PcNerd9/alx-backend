@@ -65,5 +65,8 @@ class LRUCache(BaseCaching):
         return self.cache_data.get(key, None)
 
     def shift(self, start, end):
+        """
+        shift the elements in an array to the left
+        """
         for ind in range(end, start, -1):
             self.array[ind] = self.array[ind - 1]
