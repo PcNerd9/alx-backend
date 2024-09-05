@@ -3,7 +3,7 @@
 """ contains a LRUCACHE class
 """
 
-from base import BaseCaching
+BaseCaching = __import__('base_caching').BaseCaching
 
 
 class LRUCache(BaseCaching):

@@ -3,7 +3,7 @@
 """ contains a FIFOCACHE class
 """
 
-from base import BaseCaching
+BaseCaching = __import__('base_caching').BaseCaching
 
 
 class FIFOCache(BaseCaching):

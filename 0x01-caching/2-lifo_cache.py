@@ -3,7 +3,7 @@
 """ contains a L    LIFOCACHE class
 """
 
-from base import BaseCaching
+BaseCaching = __import__('base_caching').BaseCaching
 
 
 class LIFOCache(BaseCaching):
