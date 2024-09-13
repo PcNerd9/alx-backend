@@ -73,7 +73,7 @@ def get_timezone() -> str:
     return default_timezone
 
 
-def get_user() -> Dict | None:
+def get_user() -> Union[Dict[str, Union[str, None]], None]:
     """
     get the value of the current user
     """
