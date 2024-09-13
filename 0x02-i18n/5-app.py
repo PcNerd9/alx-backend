@@ -5,11 +5,8 @@ Flask wit flask_babel
 """
 from flask import Flask, g,  render_template, request
 from flask_babel import Babel
-from typing import Dict
+from typing import Dict, Union
 
-
-app = Flask(__name__)
-babel = Babel(app)
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -19,7 +16,7 @@ users = {
 }
 
 
-def get_user() -> Dict | None:
+def get_user() -> Union[Dict[str, Union[str, None], None]]:
     """
     get the logged in user
     """
@@ -27,6 +24,10 @@ def get_user() -> Dict | None:
     if user_id and int(user_id) in users:
         return users[int(user_id)]
     return None
+
+
+app = Flask(__name__)
+babel = Babel(app)
 
 
 class Config:
