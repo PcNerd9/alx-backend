@@ -3,10 +3,11 @@
 """
 Flask wit flask_babel
 """
+from datetime import datetime, timezone
 from flask import Flask, g,  render_template, request
-from flask_babel import Babel
+from flask_babel import Babel, format_datetime
 import pytz
-from typing import Dict
+from typing import Dict, Union
 
 
 app = Flask(__name__)
@@ -29,6 +30,31 @@ class Config:
 app.config.from_object(Config)
 
 
+def get_user() -> Union[Dict[str, Union[str, None]], None]:
+    """
+    get the value of the current user
+    """
+    user_id = request.args.get("login_as", None)
+    if user_id and int(user_id) in users:
+        return users[int(user_id)]
+    return None
+
+
+@app.before_request
+def before_request() -> None:
+    """
+    set the value of the flask global variable
+    """
+    user = get_user()
+    if user:
+        setattr(g, "user", user)
+    else:
+        setattr(g, "user", None)
+    current_date = datetime.now()
+    formatted_time = format_datetime(current_date)
+    setattr(g, "timezone", formatted_time)
+
+
 @babel.localeselector
 def get_locale() -> str:
     """
@@ -37,7 +63,7 @@ def get_locale() -> str:
     locale = request.args.get("locale", None)
     if locale and locale in app.config["LANGUAGES"]:
         return locale
-    elif g.user:
+    elif g.user != None:
         locale = g.user.get("locale", None)
         if locale and locale in app.config["LANGUAGES"]:
             return locale
@@ -61,7 +87,6 @@ def get_timezone() -> str:
             return default_timezone
         else:
             return timezone
-
     if g.user:
         timezone = g.user.get("timezone", None)
         try:
@@ -73,28 +98,6 @@ def get_timezone() -> str:
     return default_timezone
 
 
-def get_user() -> Union[Dict[str, Union[str, None]], None]:
-    """
-    get the value of the current user
-    """
-    user_id = request.args.get("login_as", None)
-    if user_id and int(user_id) in users:
-        return users[int(user_id)]
-    return None
-
-
-@app.before_request
-def before_request() -> None:
-    """
-    set the value of the flask global variable
-    """
-    user = get_user()
-    if user:
-        g.user = user
-    else:
-        g.user = None
-
-
 @app.route("/", methods=["GET"])
 def home() -> str:
     """
@@ -104,4 +107,4 @@ def home() -> str:
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
