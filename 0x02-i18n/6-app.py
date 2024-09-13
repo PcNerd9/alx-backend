@@ -5,7 +5,7 @@ Flask wit flask_babel
 """
 from flask import Flask, g,  render_template, request
 from flask_babel import Babel
-from typing import Dict
+from typing import Dict, Union
 
 
 app = Flask(__name__)
@@ -49,7 +49,7 @@ def get_locale() -> str:
         return babel.default_locale
 
 
-def get_user() -> Dict | None:
+def get_user() -> Union[Dict[str, Union[str, None]], None]:
     """
     get the current logged in user
     """
