@@ -19,6 +19,16 @@ users = {
 }
 
 
+def get_user() -> Dict | None:
+    """
+    get the logged in user
+    """
+    user_id = request.args.get("login_as", None)
+    if user_id and int(user_id) in users:
+        return users[int(user_id)]
+    return None
+
+
 class Config:
     """
     the configuration class for the flask app
@@ -40,16 +50,6 @@ def get_locale() -> str:
     if locale and locale in app.config["LANGUAGES"]:
         return locale
     return request.accept_languages.best_match(app.config["LANGUAGES"])
-
-
-def get_user() -> Dict | None:
-    """
-    get the logged in user
-    """
-    user_id = request.args.get("login_as", None)
-    if user_id and int(user_id) in users:
-        return users[int(user_id)]
-    return None
 
 
 @app.before_request
